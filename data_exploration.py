@@ -8,3 +8,4 @@ tickers = ["AAPL", "AMZN", "GOOG"]
 
 df = yf.download(tickers, start="2023-09-01", end="2023-09-30")
 print(df.to_string())
+print("hi")
