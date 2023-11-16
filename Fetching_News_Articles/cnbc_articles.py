@@ -28,24 +28,26 @@ article = html_string[starting_flag + 130:end_flag]
 ##########################################
 
 #get rid of first ">"
-article = article.replace('articleBody-6-2">', '')
+article = article.replace('articleBody-6-2\">', '')
+
 
 #initialize strings
-newparttoremove = "b"
-parttoremove = "a"
+new_part_to_remove = "b"
+part_to_remove = "a"
 
 #Loop to get rid of all code in between "<" and ">" brackets
-while (article.find("<") != -1) & (article.find(">") != -1) & (parttoremove != newparttoremove): 
+while (article.find("<") != -1) & (article.find(">") != -1) & (part_to_remove != new_part_to_remove): 
     #find first "<" and ">" in string
     start = article.find("<")
     end = article.find(">")
 
     #code to make sure loop isn't stuck and previous part was removed
-    newparttoremove = parttoremove
-    parttoremove = article[start:end+1]
+    new_part_to_remove = part_to_remove
+    part_to_remove = article[start:end+1]
+    print(part_to_remove + "\n\n\n\n")
 
     #Code to remove selected part to remove
-    article = article.replace(parttoremove, '')
+    article = article.replace(part_to_remove, '')
 
 #print final article
 print(article)
