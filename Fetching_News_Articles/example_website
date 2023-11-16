@@ -1,0 +1,23 @@
+#import library
+from urllib.request import urlopen, Request
+
+#fetch html from website url
+#url = Request('https://www.cnbc.com/2022/09/30/elon-musk-shows-off-humanoid-robot-prototype-at-tesla-ai-day.html',
+#                headers={'User-Agent': 'Mozilla/5.0'})
+
+url = Request('https://www.cnbc.com/2023/11/13/stocks-making-the-biggest-moves-midday-.html',
+                headers={'User-Agent': 'Mozilla/5.0'})
+#save html into string response
+response_bytes = urlopen(url).read()
+
+response_string = response_bytes.decode("utf-8")
+
+print(type(response_string))
+
+starting_flag = response_string.find("class=\"ArticleBody-articleBody\"")
+end_flag = response_string.find("class=\"CreateFreeAccountButton-buttonText\"")
+
+#print html
+print(starting_flag)
+print(end_flag)
+print(response_string[starting_flag:starting_flag+10000])

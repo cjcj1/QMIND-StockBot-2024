@@ -1,22 +1,24 @@
 from selenium import webdriver
 import time
 
-import hashlib
-from urllib.request import urlopen, Request
-
 #open firefox
 browser=webdriver.Firefox()
-browser.get("https://www.google.com/search?q=tesla+stock+new&sca_esv=565418613&biw=1440&bih=758&sxsrf=AM9HkKkdaWRGxmJEKkJIg3043I7E-M2NOA%3A1694735344218&source=lnt&tbs=cdr%3A1%2Ccd_min%3A9%2F1%2F2022%2Ccd_max%3A10%2F1%2F2022&tbm=nws")
+browser.get("https://finance.yahoo.com/news/stock-market-news-live-updates-september-29-2022-105414183.html")
+
+#wait 10 second to let firefox open and page to fully load
 time.sleep(10)
+
+#save html into string
 html = browser.page_source
-print(html)
 
 #close web browser
 browser.close()
 
-#quick way
-url = Request('https://www.google.com/search?q=tesla+stock+new&sca_esv=565418613&biw=1440&bih=758&sxsrf=AM9HkKkdaWRGxmJEKkJIg3043I7E-M2NOA%3A1694735344218&source=lnt&tbs=cdr%3A1%2Ccd_min%3A9%2F1%2F2022%2Ccd_max%3A10%2F1%2F2022&tbm=nws',
-                headers={'User-Agent': 'Mozilla/5.0'})
-response = urlopen(url).read()
+#print html from page
+#print(html)
 
-print(response)
+place = html.find("if(!window.finWebCore){window.finWebCore=function r(e){const{isModern:t=!0,isDev:i=!1,lang:o=s,devAssets:a,prodAssets:r,crumb:n=")
+
+
+print(len(html))
+print(html[place:place+100])
