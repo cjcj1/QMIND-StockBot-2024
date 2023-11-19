@@ -8,7 +8,7 @@ adj = pd.read_csv('Stocks_AdjClose_3yr.csv')
 vol = pd.read_csv('Stocks_Volume_3yr.csv')
 
 # changing index to datetime
-timestamps = pd.to_datetime(adj.index).astype(int) / 10**9
+timestamps = pd.to_datetime(adj.index).astype('int64').astype(int) / 10**9
 
 # calculating linear regression
 lin_reg = LinearRegression().fit(timestamps.values.reshape(-1, 1), adj["AAPL"])
