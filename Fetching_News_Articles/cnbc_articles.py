@@ -23,13 +23,14 @@ end_flag = html_string.find("class=\"SidebarArticle-sidebar PageBuilder-sidebar\
 article = html_string[starting_flag + 130:end_flag]
 
 
-##########################################
-### !!! remove line below for other news sources
-##########################################
+firstbracketopen = article.find("<")
+firstbracketclose = article.find(">")
 
-#get rid of first ">"
-article = article.replace('articleBody-6-2\">', '')
+if (firstbracketclose < firstbracketopen): 
+	parttoremovefirst = article[1:firstbracketclose+1]
+	article = article.replace(parttoremovefirst, '')
 
+#print(article)
 
 #initialize strings
 new_part_to_remove = "b"
@@ -44,7 +45,6 @@ while (article.find("<") != -1) & (article.find(">") != -1) & (part_to_remove !=
     #code to make sure loop isn't stuck and previous part was removed
     new_part_to_remove = part_to_remove
     part_to_remove = article[start:end+1]
-    print(part_to_remove + "\n\n\n\n")
 
     #Code to remove selected part to remove
     article = article.replace(part_to_remove, '')
