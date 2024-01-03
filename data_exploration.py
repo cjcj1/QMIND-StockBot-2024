@@ -2,8 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # reading data from csv
-adj = pd.read_csv('Stocks_AdjClose_3yr.csv', index_col=0, parse_dates=True)
-vol = pd.read_csv('Stocks_Volume_3yr.csv', index_col=0, parse_dates=True)
+adj = pd.read_csv('Stocks_AdjClose_10yr.csv', index_col=0, parse_dates=True)
+vol = pd.read_csv('Stocks_Volume_10yr.csv', index_col=0, parse_dates=True)
 
 # plotting data
 plt.scatter(adj.index, adj["AAPL"], label='Data Points')
