@@ -3,8 +3,11 @@ from urllib.request import urlopen, Request
 import re
 
 #fetch html from website url
-url = Request('https://www.cnbc.com/2023/11/02/apple-aapl-earnings-report-q4-2023.html',
+url = Request('https://www.cnbc.com/2021/03/10/muddy-waters-carson-block-defends-short-selling-as-pretty-american.html',
                 headers={'User-Agent': 'Mozilla/5.0'})
+
+#https://www.cnbc.com/2023/10/30/tesla-shares-drop-5percent-on-panasonic-battery-warning.html
+#https://www.cnbc.com/2023/11/02/apple-aapl-earnings-report-q4-2023.html
 
 html_bytes = urlopen(url).read()
 

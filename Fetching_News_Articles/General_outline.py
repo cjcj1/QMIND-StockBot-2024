@@ -1,24 +1,52 @@
-from selenium import webdriver
-import time
+from bs4 import BeautifulSoup
+import requests, json, lxml
 
-#open firefox
-browser=webdriver.Firefox()
-browser.get("https://finance.yahoo.com/news/stock-market-news-live-updates-september-29-2022-105414183.html")
+query = "how to get google search page source code by python"
 
-#wait 10 second to let firefox open and page to fully load
-time.sleep(10)
+# https://docs.python-requests.org/en/master/user/quickstart/#passing-parameters-in-urls
+params = {
+    "q": query,          # query example
+    "hl": "en",          # language
+    "gl": "uk",          # country of the search, UK -> United Kingdom
+    "start": 0,          # number page by default up to 0
+    #"num": 100          # parameter defines the maximum number of results to return.
+}
 
-#save html into string
-html = browser.page_source
+# https://docs.python-requests.org/en/master/user/quickstart/#custom-headers
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+}
 
-#close web browser
-browser.close()
+page_limit = 5           # page limit
+page_num = 0
 
-#print html from page
-#print(html)
+data = []
 
-place = html.find("if(!window.finWebCore){window.finWebCore=function r(e){const{isModern:t=!0,isDev:i=!1,lang:o=s,devAssets:a,prodAssets:r,crumb:n=")
+while True:
+    page_num += 1
+    print(f"page: {page_num}")
+        
+    html = requests.get("https://www.google.com/search", params=params, headers=headers, timeout=30)
+    soup = BeautifulSoup(html.text, 'lxml')
+    
+    for result in soup.select(".tF2Cxc"):
+        title = result.select_one(".DKV0Md").text
+        try:
+           snippet = result.select_one(".lEBKkf span").text
+        except:
+           snippet = None
+        links = result.select_one(".yuRUbf a")["href"]
+      
+        data.append({
+          "title": title,
+          "snippet": snippet,
+          "links": links
+        })
 
-
-print(len(html))
-print(html[place:place+100])
+    if page_num == page_limit:
+        break
+    if soup.select_one(".d6cvqb a[id=pnnext]"):
+        params["start"] += 10
+    else:
+        break
+print(json.dumps(data, indent=2, ensure_ascii=False))
