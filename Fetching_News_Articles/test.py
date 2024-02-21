@@ -1,53 +1,43 @@
+from urllib.request import urlopen, Request
+import re
+# Fetch HTML from website URL
+url = Request('https://www.fool.com/investing/2024/01/04/apples-85-billion-services-business-is-less-profit/',
+              headers={'User-Agent': 'Mozilla/5.0'})
+html_bytes = urlopen(url).read()
 
-from bs4 import BeautifulSoup
-import requests, json, lxml
+# Convert HTML from byte type to string type
+html_string = html_bytes.decode("utf-8")
 
-query = "tesla stock"
+###########################################
+#### Specific to each news source due to HTML structure differences
+###########################################
 
-# https://docs.python-requests.org/en/master/user/quickstart/#passing-parameters-in-urls
-params = {
-    "q": query,          # query example
-    "hl": "en",          # language
-    "gl": "us",          # country of the search, UK -> United Kingdom
-    "start": 0,          # number page by default up to 0
-    #"num": 100          # parameter defines the maximum number of results to return.
-}
+# Find the index of the class name for the div tag where the article starts
+starting_flag = "class=\"article-body\""
+start_index = html_string.find(starting_flag)
+print("Start index:", start_index) 
 
-# https://docs.python-requests.org/en/master/user/quickstart/#custom-headers
-headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
-}
+# Set start after the div tag
+start_content_index = html_string.find('>', start_index) + 1
+print("Start content index:", start_content_index) 
 
-page_limit = 5           # page limit
-page_num = 0
+# Find the index of the phrase that indicates the end of the article
+end_flag = 'class="article-pitch-container"'
+end_index = html_string.find(end_flag)
+print("End index:", end_index) 
 
-data = []
+if start_content_index != -1 and end_index != -1:
+    # Extract the article using the indices to get the substring
+    article = html_string[start_content_index:end_index]
 
-while True:
-    page_num += 1
-    print(f"page: {page_num}")
-        
-    html = requests.get("https://www.google.com/search", params=params, headers=headers, timeout=30)
-    soup = BeautifulSoup(html.text, 'lxml')
+    # Remove script tags and their content
+    article = re.sub(r'<script[^<]*</script>', '', article, flags=re.DOTALL)
     
-    for result in soup.select(".tF2Cxc"):
-        title = result.select_one(".DKV0Md").text
-        try:
-           snippet = result.select_one(".lEBKkf span").text
-        except:
-           snippet = None
-        links = result.select_one(".yuRUbf a")["href"]
-      
-        data.append({
-          "title": title,
-          "snippet": snippet,
-          "links": links
-        })
-
-    if page_num == page_limit:
-        break
-    if soup.select_one(".d6cvqb a[id=pnnext]"):
-        params["start"] += 10
-    else:
-        break
-print(json.dumps(data, indent=2, ensure_ascii=False))
+    # Remove remaining HTML tags to isolate text
+    clean_article = re.sub(r'<[^>]+>', '', article, flags=re.DOTALL)
+    
+    # Print the cleaned article
+    print(clean_article)
+else:
+    # If start or end indices are not found, handle this case
+    print("Could not find the start or end of the article content.")

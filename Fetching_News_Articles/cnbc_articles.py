@@ -3,7 +3,7 @@ from urllib.request import urlopen, Request
 import re
 
 #fetch html from website url
-url = Request('https://www.cnbc.com/2021/03/10/muddy-waters-carson-block-defends-short-selling-as-pretty-american.html',
+url = Request('https://www.cnbc.com/2023/11/09/tesla-stock-drops-5percent-after-hsbc-calls-it-a-very-expensive-auto-company.html',
                 headers={'User-Agent': 'Mozilla/5.0'})
 
 #https://www.cnbc.com/2023/10/30/tesla-shares-drop-5percent-on-panasonic-battery-warning.html
@@ -24,7 +24,6 @@ end_flag = html_string.find("class=\"SidebarArticle-sidebar PageBuilder-sidebar\
 
 #Save trimmed article as a string
 article = html_string[starting_flag + 130:end_flag]
-
 
 firstbracketopen = article.find("<")
 firstbracketclose = article.find(">")
