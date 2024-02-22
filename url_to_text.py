@@ -1,16 +1,21 @@
 import pandas as pd
+from newspaper import Article
 
 urls = pd.read_csv('URLs.csv', index_col=0)
-text = urls
-
-print(urls.to_string())
+text = urls.copy()
 
 for month, row in urls.iterrows():
-    for stock in row:
-        newCell = stock.split()
-        cellIndex = 0
-        for item in newCell:
-            newItem = # web scraping for item
-            newCell[cellIndex] = newItem
-            cellIndex += 1
-        text[month][stock] = newCell
+    for stock in urls.columns:
+        urls_list = row[stock].split()
+        text_list = []
+        for url in urls_list:
+            try:
+                article = Article(url)
+                article.download()
+                article.parse()
+                text_list.append(article.text.replace('\\n', ' ').replace("\n", ' '))
+            except Exception as e:
+                print(f"Error processing URL {url}")
+        text.at[month, stock] = text_list
+
+text.to_csv('NLP_TrainingData.csv')
