@@ -1,43 +1,85 @@
-from urllib.request import urlopen, Request
-import re
-# Fetch HTML from website URL
-url = Request('https://www.fool.com/investing/2024/01/04/apples-85-billion-services-business-is-less-profit/',
-              headers={'User-Agent': 'Mozilla/5.0'})
-html_bytes = urlopen(url).read()
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import MinMaxScaler
 
-# Convert HTML from byte type to string type
-html_string = html_bytes.decode("utf-8")
 
-###########################################
-#### Specific to each news source due to HTML structure differences
-###########################################
+file_path = '/Users/marcoschapira/Documents/Qmind/QMIND-StockBot-2024/DataSets/'  
+df = pd.read_csv(file_path + 'Stocks_AdjClose_10yr.csv')#, index_col=1, parse_dates=True)
+StockDividends = pd.read_csv(file_path + 'Stocks_Dividends_10yr.csv')#, index_col=1, parse_dates=True)
+StocksSplits = pd.read_csv(file_path + 'Stocks_Splits_10yr.csv')#, index_col=1, parse_dates=True)
+StocksVolume = pd.read_csv(file_path + 'Stocks_Volume_10yr.csv')#, index_col=1, parse_dates=True)
 
-# Find the index of the class name for the div tag where the article starts
-starting_flag = "class=\"article-body\""
-start_index = html_string.find(starting_flag)
-print("Start index:", start_index) 
+df = df.drop('Unnamed: 0', axis=1)
+StockDividends = StockDividends.drop('Unnamed: 0', axis=1)
+StocksSplits = StocksSplits.drop('Unnamed: 0', axis=1)
+StocksVolume = StocksVolume.drop('Unnamed: 0', axis=1)
 
-# Set start after the div tag
-start_content_index = html_string.find('>', start_index) + 1
-print("Start content index:", start_content_index) 
+scaler = MinMaxScaler()
 
-# Find the index of the phrase that indicates the end of the article
-end_flag = 'class="article-pitch-container"'
-end_index = html_string.find(end_flag)
-print("End index:", end_index) 
+#print(df.loc[0, :])
 
-if start_content_index != -1 and end_index != -1:
-    # Extract the article using the indices to get the substring
-    article = html_string[start_content_index:end_index]
+# Initialize the Min-Max Scaler
+scaler = MinMaxScaler()
 
-    # Remove script tags and their content
-    article = re.sub(r'<script[^<]*</script>', '', article, flags=re.DOTALL)
-    
-    # Remove remaining HTML tags to isolate text
-    clean_article = re.sub(r'<[^>]+>', '', article, flags=re.DOTALL)
-    
-    # Print the cleaned article
-    print(clean_article)
-else:
-    # If start or end indices are not found, handle this case
-    print("Could not find the start or end of the article content.")
+# Scale the dataset
+scaled_PriceData = scaler.fit_transform(df.values)
+scaled_DividendsData = scaler.fit_transform(StockDividends.values)
+scaled_SplitsData = scaler.fit_transform(StocksSplits.values)
+scaled_VolumeData = scaler.fit_transform(StocksVolume.values)
+
+#print(scaled_PriceData)
+
+
+################################
+#Need to make new def below that splits up datasets into different datasets for each stock
+################################
+
+NumberOfStocks = scaled_PriceData.shape[1] #X Dimention
+NumberOfDays = scaled_PriceData.shape[0] #Y Dimention
+NumberOfdatasets = 4 #Z Dimention
+TheDataset = [[ ['#' for col in range(NumberOfdatasets)] for col in range(NumberOfDays)] for row in range(NumberOfStocks)]
+
+NumberOfRows = NumberOfDays
+tempDataSet = pd.DataFrame(index=np.arange(NumberOfRows), columns=['Price', 'Volume']) #, 'Dividends'])
+
+#print(scaled_PriceData.shape[0])
+print(scaled_SplitsData[114][114])
+
+SaveingLocation = '/Users/marcoschapira/Documents/Qmind/QMIND-StockBot-2024/DataSets/ByStock/'
+
+for Stock in range(scaled_PriceData.shape[1]):
+  for day in range(scaled_PriceData.shape[0]):       
+    tempDataSet.loc[day][0] = scaled_PriceData[day][Stock]
+    tempDataSet.loc[day][1] = scaled_VolumeData[day][Stock]
+    #tempDataSet.loc[day][2] = scaled_DividendsData[day][Stock]
+    #tempDataSet.loc[day][3] = scaled_SplitsData[day][Stock]
+
+    print(scaled_PriceData[day][Stock])
+
+  tempDataSet.to_csv(SaveingLocation + 'Stock' + str(Stock) + '.csv', index=False)
+
+
+
+'''
+
+def create_sequences(data, sequence_length):
+    xs = []
+    ys = []
+    for i in range(len(data)-sequence_length):
+        x_part = data[i:i+sequence_length]
+        y_part = data[i+sequence_length]
+        xs.append(x_part)
+        ys.append(y_part)
+    return np.array(xs), np.array(ys)
+
+# Choose a sequence length
+sequence_length = 60  # Number of days to use for prediction. Adjust as needed.
+
+# Create the sequences
+X, y = create_sequences(scaled_PriceData, sequence_length)
+
+train_size = int(len(X) * 0.8)  # 80% for training, 20% for testing
+X_train, X_test = X[:train_size], X[train_size:]
+y_train, y_test = y[:train_size], y[train_size:]
+
+'''
