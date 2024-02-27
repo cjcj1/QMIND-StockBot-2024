@@ -76,10 +76,6 @@ for Stock in range(scaled_PriceData.shape[1]):
  tempDataSet.to_csv(SaveingLocation + 'Stock' + str(Stock) + '.csv', index=False)
 
 
-
-
-
-
 '''
 
 
