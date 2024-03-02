@@ -15,15 +15,13 @@ app.layout = dbc.Container([
     ]),
     html.Div([
         dbc.Row([
-            dbc.Col(width=5),
             dbc.Col(html.Img(src="/assets/8ball_icon.png", style={'width': '20%', 'height': '20%'}),
                     style={'textAlign': 'center'}, width=4)
         ])
     ]),
     html.Div([
         dbc.Row([
-            dbc.Col(width=4),
-            dbc.Col(dcc.Input(value='tesla', id='stock_select'), width=4),
+            dbc.Col(dcc.Input(value='tesla', id='stock_select'), style={'textAlign': 'center'}, width=4),
         ]),
     ]),
     html.Div([
@@ -31,19 +29,25 @@ app.layout = dbc.Container([
             type='default',
             children=[
                 html.Br(),
-                html.H2(id='stock_pred', style={'color': 'white', 'textAlign': 'center'})
+                dbc.Row([
+                    html.H2(id='stock_pred', style={'color': 'white', 'textAlign': 'center'}),
+                ]),
+                html.Br(),
+                dbc.Row([
+                    html.H2(id='stock_rating', style={'color': 'white', 'textAlign': 'center'}),
+                ]),
             ]
         )
     ]),
     html.Div([
         html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(),
-        html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(),
+        html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), 
     ])
 ], style={'backgroundColor': 'black'}, fluid=True)
 
 
 @app.callback(
-    Output('stock_pred', 'children'),
+    Output('stock_pred', 'children'), Output('stock_rating', 'children'),
     [Input('stock_select', 'value')]
 )
 def update_result(stock_select):
@@ -54,7 +58,7 @@ def update_result(stock_select):
         outlook = "GOOD"
     else:
         outlook = "BAD"
-    return f"Outlook is {outlook}"
+    return f"Outlook is {outlook}", pred
 
 
 if __name__ == '__main__':
