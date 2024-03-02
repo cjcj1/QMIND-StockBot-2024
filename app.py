@@ -34,14 +34,15 @@ app.layout = dbc.Container([
                 ]),
                 html.Br(),
                 dbc.Row([
-                    html.H2(id='stock_rating', style={'color': 'white', 'textAlign': 'center'}),
+                    html.H3("Score from -1 to 1:", style={'color': 'white', 'textAlign': 'center'}),
+                    html.H3(id='stock_rating', style={'color': 'white', 'textAlign': 'center'}),
                 ]),
             ]
         )
     ]),
     html.Div([
         html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(),
-        html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), 
+        html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), 
     ])
 ], style={'backgroundColor': 'black'}, fluid=True)
 
@@ -58,7 +59,7 @@ def update_result(stock_select):
         outlook = "GOOD"
     else:
         outlook = "BAD"
-    return f"Outlook is {outlook}", pred
+    return f"Outlook is {outlook}", round(pred, 3)
 
 
 if __name__ == '__main__':
