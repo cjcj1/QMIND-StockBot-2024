@@ -14,7 +14,7 @@ class live_nlp:
     def __init__(self):
         pass
 
-    def live_nlp(stock):
+    def run_nlp(self, stock):
         #google search
         currentStock = stock + "+stock"
         BaseURL = "https://www.google.com/search?sca_esv=bcd8cd53e04dedb1&sxsrf=ACQVn08KSC8h2lXMkLo1lTlwMgmkJh1wpQ:1709011552016&q=TheStockSymbole&tbm=nws&source=lnms&prmd=znivsmbt&sa=X&sqi=2&pjf=1&ved=2ahUKEwingOaT5MqEAxXNrokEHWzLBuoQ0pQJegQIDBAB&biw=1440&bih=754&dpr=2"
