@@ -48,7 +48,9 @@ app.layout = dbc.Container([
 )
 def update_result(stock_select):
     pred = live_nlp().run_nlp(stock_select)
-    if pred > 0:
+    if stock_select == '' or stock_select == None:
+        outlook = "not calculated"
+    elif pred > 0:
         outlook = "GOOD"
     else:
         outlook = "BAD"
