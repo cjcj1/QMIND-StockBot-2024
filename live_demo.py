@@ -77,5 +77,5 @@ class live_nlp:
             
 
         print(nlp_score)
-        #return sum(nlp_score)/len(nlp_score)
+        return sum(nlp_score)/len(nlp_score)
 
