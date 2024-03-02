@@ -42,7 +42,7 @@ app.layout = dbc.Container([
     ]),
     html.Div([
         html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(),
-        html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), 
+        html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(),
     ])
 ], style={'backgroundColor': 'black'}, fluid=True)
 
@@ -52,6 +52,7 @@ app.layout = dbc.Container([
     [Input('stock_select', 'value')]
 )
 def update_result(stock_select):
+    stock_select = stock_select.replace(" ", "+")
     pred = live_nlp().run_nlp(stock_select)
     if stock_select == '' or stock_select == None:
         outlook = "not calculated"
