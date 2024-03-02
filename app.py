@@ -6,8 +6,6 @@ from live_demo import live_nlp
 
 app = dash.Dash(__name__)
 
-df = pd.read_csv('Stocks_AdjClose_10yr.csv', index_col=0, parse_dates=True)
-
 app.layout = dbc.Container([
     html.Div([
         html.Br(),
@@ -25,12 +23,17 @@ app.layout = dbc.Container([
     html.Div([
         dbc.Row([
             dbc.Col(width=4),
-            dbc.Col(dcc.Dropdown(value='AAPL', id='stock_select', options=df.columns), width=4),
+            dbc.Col(dcc.Input(value='tesla', id='stock_select'), width=4),
         ]),
     ]),
     html.Div([
-        html.Br(),
-        html.H2(id='stock_pred', style={'color': 'white', 'textAlign': 'center'})
+        dcc.Loading(
+            type='default',
+            children=[
+                html.Br(),
+                html.H2(id='stock_pred', style={'color': 'white', 'textAlign': 'center'})
+            ]
+        )
     ]),
     html.Div([
         html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(),
